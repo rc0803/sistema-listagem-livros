@@ -8,67 +8,99 @@ struct Livro {
     char autor[100];
 };
 
-int main() {
-    struct Livro lista[50];
-    int quantidade = 0;
-    int opcao;
+struct Usuario {
+    int id;
+    char nome[100];
+    char matricula[30];
+};
 
-    // Tentando abrir o arquivo pra carregar os dados
-    FILE *arquivo = fopen("livros.txt", "r");
-    if (arquivo != NULL) {
-        while (fscanf(arquivo, "%d;%[^;];%[^\n]\n", &lista[quantidade].id, lista[quantidade].titulo, lista[quantidade].autor) == 3) {
-            quantidade++;
-        }
-        fclose(arquivo);
-    }
+int main() {
+    int opcao;
+    FILE *f;
 
     do {
-        printf("\n--- MENU ---\n");
+        printf("\n--- MENU BIBLIOTECA ---\n");
         printf("1. Listar livros\n");
-        printf("2. Cadastrar livro\n");
+        printf("2. Adicionar livro\n");
+        printf("3. Listar usuarios\n");
+        printf("4. Adicionar usuario\n");
         printf("0. Sair\n");
-        printf("Opcao: ");
+        printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
+        getchar();
 
         if (opcao == 1) {
-            printf("\n--- Lista de Livros ---\n");
-            if (quantidade == 0) {
-                printf("Nenhum livro cadastrado.\n");
+            f = fopen("livros.txt", "r");
+            if (f == NULL) {
+                printf("Erro ao abrir livros.txt ou arquivo nao existe.\n");
             } else {
-                for (int i = 0; i < quantidade; i++) {
-                    printf("ID: %d | Titulo: %s | Autor: %s\n", lista[i].id, lista[i].titulo, lista[i].autor);
+                struct Livro l;
+                printf("\n--- LISTA DE LIVROS ---\n");
+                while (fscanf(f, "%d;%99[^;];%99[^\n]\n", &l.id, l.titulo, l.autor) == 3) {
+                    printf("ID: %d | Titulo: %s | Autor: %s\n", l.id, l.titulo, l.autor);
                 }
+                fclose(f);
             }
-        } 
-        else if (opcao == 2) {
-            if (quantidade >= 50) {
-                printf("Biblioteca cheia!\n");
+        } else if (opcao == 2) {
+            f = fopen("livros.txt", "a");
+            if (f == NULL) {
+                printf("Erro ao abrir livros.txt para escrita.\n");
             } else {
-                printf("\n--- Cadastro ---\n");
-                lista[quantidade].id = quantidade + 1;
+                struct Livro l;
+                printf("\n--- NOVO LIVRO ---\n");
+                printf("ID: ");
+                scanf("%d", &l.id);
+                getchar();
 
                 printf("Titulo: ");
-                fflush(stdin);
-                gets(lista[quantidade].titulo);
+                fgets(l.titulo, sizeof(l.titulo), stdin);
+                l.titulo[strcspn(l.titulo, "\n")] = 0;
 
                 printf("Autor: ");
-                gets(lista[quantidade].autor);
+                fgets(l.autor, sizeof(l.autor), stdin);
+                l.autor[strcspn(l.autor, "\n")] = 0;
 
-                FILE *arq = fopen("livros.txt", "a");
-                if (arq != NULL) {
-                    fprintf(arq, "%d;%s;%s\n", lista[quantidade].id, lista[quantidade].titulo, lista[quantidade].autor);
-                    fclose(arq);
-                }
-
-                quantidade++;
-                printf("Salvo com sucesso!\n");
+                fprintf(f, "%d;%s;%s\n", l.id, l.titulo, l.autor);
+                fclose(f);
+                printf("Livro adicionado com sucesso!\n");
             }
-        } 
-        else if (opcao == 0) {
-            printf("\nSaindo...\n");
-        } 
-        else {
-            printf("\nOpcao invalida!\n");
+        } else if (opcao == 3) {
+            f = fopen("usuarios.txt", "r");
+            if (f == NULL) {
+                printf("Erro ao abrir usuarios.txt ou arquivo nao existe.\n");
+            } else {
+                struct Usuario u;
+                printf("\n--- LISTA DE USUARIOS ---\n");
+                while (fscanf(f, "%d;%99[^;];%29[^\n]\n", &u.id, u.nome, u.matricula) == 3) {
+                    printf("ID: %d | Nome: %s | Matricula: %s\n", u.id, u.nome, u.matricula);
+                }
+                fclose(f);
+            }
+        } else if (opcao == 4) {
+            f = fopen("usuarios.txt", "a");
+            if (f == NULL) {
+                printf("Erro ao abrir usuarios.txt para escrita.\n");
+            } else {
+                struct Usuario u;
+                printf("\n--- NOVO USUARIO ---\n");
+                printf("ID: ");
+                scanf("%d", &u.id);
+                getchar();
+
+                printf("Nome: ");
+                fgets(u.nome, sizeof(u.nome), stdin);
+                u.nome[strcspn(u.nome, "\n")] = 0;
+
+                printf("Matricula/RA: ");
+                fgets(u.matricula, sizeof(u.matricula), stdin);
+                u.matricula[strcspn(u.matricula, "\n")] = 0;
+
+                fprintf(f, "%d;%s;%s\n", u.id, u.nome, u.matricula);
+                fclose(f);
+                printf("Usuario adicionado com sucesso!\n");
+            }
+        } else if (opcao != 0) {
+            printf("Opcao invalida!\n");
         }
 
     } while (opcao != 0);
