@@ -1,3 +1,6 @@
-1;A Metamorfose;Franz Kafka
-2;Meridiano de Sangue;Cormac McCarthy
-3;Oyasumi Punpun;Inio Asano
+COD01;Meridiano de Sangue;Cormac McCarthy;1985;2
+COD02;A Metamorfose;Franz Kafka;1915;4
+COD03;O Senhor dos Aneis: A Sociedade do Anel;J. R. R. Tolkien;1954;3
+COD04;O Senhor dos Aneis: As Duas Torres;J. R. R. Tolkien;1954;2
+COD05;O Senhor dos Aneis: O Retorno do Rei;J. R. R. Tolkien;1955;2
+COD06;A Mala de Hana;Karen Levine;2002;3
